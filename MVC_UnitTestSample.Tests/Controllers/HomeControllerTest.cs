@@ -36,6 +36,8 @@ namespace MVC_UnitTestSample.Tests.Controllers
 
             // Assert
             Assert.AreEqual("Your application description page.", result.ViewBag.Message);
+
+            Assert.AreNotEqual("About", result.ViewName);
         }
 
         [TestMethod]
