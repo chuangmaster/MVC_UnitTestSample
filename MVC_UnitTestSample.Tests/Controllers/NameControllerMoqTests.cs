@@ -27,7 +27,7 @@ namespace MVC_UnitTestSample.Controllers.Tests
         {
             //arrange
             var mock = new Mock<INameRepository>(); //step1. 建立Mock物件
-            mock.Setup(p => p.GetNameByData("Tom")).Returns("Tom");//step2. 設定(setup)模擬此物件時，要執行mothod的方法，而且要被執行過才算數(varifiable)
+            mock.Setup(p => p.GetNameByData("Tom")).Returns("Tom");//step2. 設定(setup)模擬此物件時，要執行mothod的方法，回傳Tom
             var controller = GetNameController(mock.Object);
 
             //actual
