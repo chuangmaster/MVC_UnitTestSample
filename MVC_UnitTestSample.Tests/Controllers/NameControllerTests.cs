@@ -21,7 +21,7 @@ namespace MVC_UnitTestSample.Controllers.Tests
         }
 
         [TestMethod()]
-        public void NameControllerTest_英取得名字Tom()
+        public void NameControllerTest_應取得名字Tom()
         {
             //arrange
             var controller = GetNameController();
