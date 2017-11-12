@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MVC_UnitTestSample.Models
 {
-    public class NameRepository
+    public class NameRepository : INameRepository
     {
         MyData data;
 
@@ -22,9 +22,16 @@ namespace MVC_UnitTestSample.Models
         //    db = new MyDataContext(connstr);
         //}
 
-        public string GetNameByData(string Name)
+        //public string GetNameByData(string Name)
+        //{
+        //    var q = data.User.FirstOrDefault(x => x == Name);
+
+        //    return q;
+        //}
+
+        public virtual string GetNameByData(string Name)
         {
-            var q = data.User.FirstOrDefault(x=>x==Name);
+            var q = data.User.FirstOrDefault(x => x == Name);
 
             return q;
         }

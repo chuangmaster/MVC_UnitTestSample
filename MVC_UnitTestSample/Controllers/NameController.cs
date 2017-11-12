@@ -9,20 +9,22 @@ namespace MVC_UnitTestSample.Controllers
 {
     public class NameController : Controller
     {
-        NameRepository _rsp;
+        INameRepository _NameRepository;
+
         public NameController()
         {
-            _rsp = new NameRepository();
+            _NameRepository = new NameRepository();
         }
 
-        public NameController(NameRepository rsp)
+        public NameController(INameRepository nameRepository)
         {
-            _rsp = rsp;
+            _NameRepository = nameRepository;
         }
+
         // GET: Name
         public ActionResult Index(string name)
         {
-            ViewBag.Name = _rsp.GetNameByData(name);
+            ViewBag.Name = _NameRepository.GetNameByData(name);
             return View();
         }
     }

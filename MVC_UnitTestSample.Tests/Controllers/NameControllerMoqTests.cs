@@ -14,10 +14,10 @@ namespace MVC_UnitTestSample.Controllers.Tests
     [TestClass()]
     public class NameControllerMoqTests
     {
-
-        private static NameController GetNameController()
+        
+        private static NameController GetNameController(INameRepository nameRepository)
         {
-            NameController controller = new NameController();
+            NameController controller = new NameController(nameRepository);
 
             return controller;
         }
@@ -26,15 +26,16 @@ namespace MVC_UnitTestSample.Controllers.Tests
         public void NameControllerTest_應取得名字Tom()
         {
             //arrange
-            var controller = GetNameController();
-            var mock = new Mock<NameRepository>(); //step1. 建立Mock物件
-            mock.Setup(p => p.GetNameByData("Tom")).Verifiable();//step2. 設定(setup)模擬此物件時，要執行mothod的方法，而且要被執行過才算數(varifiable)//actual
+            var mock = new Mock<INameRepository>(); //step1. 建立Mock物件
+            mock.Setup(p => p.GetNameByData("Tom")).Returns("Tom");//step2. 設定(setup)模擬此物件時，要執行mothod的方法，而且要被執行過才算數(varifiable)
+            var controller = GetNameController(mock.Object);
 
-            var Result = controller.Index(mock.Object.ToString()) as ViewResult;//step3. 設定完成後取出被 mock 過的物件
+            //actual
+            var Result = controller.Index("Tom") as ViewResult;//step3. 設定完成後取出被 mock 過的物件
 
 
             //assert
-            Assert.AreEqual(Result.ViewBag.Name, "Tom");
+            Assert.AreEqual("Tom", Result.ViewBag.Name);
         }
     }
 }
