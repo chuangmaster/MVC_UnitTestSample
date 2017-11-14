@@ -442,5 +442,37 @@ namespace UnitTest_NSubstitute
             Assert.AreEqual(3, result);
             Assert.AreEqual(1, counter);
         }
+
+        //Refer http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_throwing_exceptions.html
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Test_ThrowingExceptions_ForVoid()
+        {
+            //拋出異常
+            var calculator = Substitute.For<ICalculator>();
+
+            // 对无返回值函数
+            calculator.Add(-1, -1).Returns(x => { throw new Exception(); });
+
+            // 抛出异常
+            calculator.Add(-1, -1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Test_ThrowingExceptions_ForNonVoidAndVoid()
+        {
+            //拋出異常
+            var calculator = Substitute.For<ICalculator>();
+
+            // 对有返回值或无返回值函数
+            calculator
+              .When(x => x.Add(-2, -2))
+              .Do(x => { throw new Exception(); });
+
+            // 抛出异常
+            calculator.Add(-2, -2);
+        }
     }
 }
