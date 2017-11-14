@@ -430,7 +430,6 @@ namespace UnitTest_NSubstitute
         public void Test_CallbacksWhenDo_UseWhenDoOnNonVoid()
         {
             //为无返回值调用创建回调
-
             var calculator = Substitute.For<ICalculator>();
 
             var counter = 0;
