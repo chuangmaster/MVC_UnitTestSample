@@ -191,5 +191,26 @@ namespace UnitTest_NSubstitute
              */
         }
 
+        //Refer http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_callbacks_void_calls_and_when_do.html
+
+
+        [TestMethod]
+        public void Test_CallbacksWhenDo_UseWhenDo()
+        {
+            //为无返回值调用创建回调
+            /*Returns() 可以被用于为成员设置产生返回值的回调函数，但是对于 void 类型的成员，
+             * 我们需要不同的方式，因为我们无法调用一个 void 并返回一个值。对于这种情况，
+             * 我们可以使用 When..Do 语法。*/
+            var counter = 0;
+            var foo = Substitute.For<IFoo>();
+
+            foo.When(x => x.SayHello("World"))
+              .Do(x => counter++);
+
+            foo.SayHello("World");
+            foo.SayHello("World");
+            Assert.AreEqual(2, counter);
+        }
+
     }
 }

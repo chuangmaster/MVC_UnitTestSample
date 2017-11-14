@@ -11,5 +11,7 @@ namespace UnitTest_NSubstitute.Test.Interface
         string Bar(int a, string b);
 
         string Append(string a, string b);
+
+        void SayHello(string to);
     }
 }

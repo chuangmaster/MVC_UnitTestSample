@@ -394,15 +394,17 @@ namespace UnitTest_NSubstitute
         [TestMethod]
         public void Test_CallbacksWhenDo_PassFunctionsToReturns()
         {
+            //當取得回傳値後，執行AndDoes內容
             var calculator = Substitute.For<ICalculator>();
 
             var counter = 0;
-            //此種寫法表示 
+            //寫法1 
             //calculator
             //  .Add(0, 0)
             //  .ReturnsForAnyArgs(x => 0)
             //  .AndDoes(x => counter++);
 
+            //寫法2
             //calculator
             //  .Add(0, 0)
             //  .ReturnsForAnyArgs(x =>
@@ -411,6 +413,7 @@ namespace UnitTest_NSubstitute
             //      return 0;
             //  });
 
+            //採用此寫法必須傳入參數(0,0)才會回傳0
             //calculator
             //  .Add(0, 0)
             //  .Returns(0)
@@ -421,6 +424,24 @@ namespace UnitTest_NSubstitute
             calculator.Add(2, 2);
             calculator.Add(11, -3);
             Assert.AreEqual(counter, 3);
+        }
+
+        [TestMethod]
+        public void Test_CallbacksWhenDo_UseWhenDoOnNonVoid()
+        {
+            //为无返回值调用创建回调
+
+            var calculator = Substitute.For<ICalculator>();
+
+            var counter = 0;
+            calculator.Add(1, 2).Returns(3);
+            calculator
+              .When(x => x.Add(Arg.Any<int>(), Arg.Any<int>()))
+              .Do(x => counter++);
+
+            var result = calculator.Add(1, 2);
+            Assert.AreEqual(3, result);
+            Assert.AreEqual(1, counter);
         }
     }
 }
