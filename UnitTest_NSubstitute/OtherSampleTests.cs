@@ -153,7 +153,6 @@ namespace UnitTest_NSubstitute
         public void Test_CheckReceivedCalls_MakeSureWatcherSubscribesToCommandExecuted()
         {
             //檢查事件訂閱
-
             var command = Substitute.For<ICommand>();
             var watcher = new CommandWatcher(command);
 
@@ -164,7 +163,33 @@ namespace UnitTest_NSubstitute
             command.Received().Executed += Arg.Any<EventHandler>();
         }
 
+        //http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_clearing_received_calls.html
 
+
+        [TestMethod]
+        public void Test_ClearReceivedCalls_ForgetPreviousCalls()
+        {
+            //清理以收到的呼叫
+            var command = Substitute.For<ICommand>();
+            var runner = new OnceOffCommandRunner(command);
+
+            // 第一次运行
+            runner.Run();
+            command.Received().Execute();
+
+            // 忘记前面对command的调用
+            command.ClearReceivedCalls();
+
+            // 第二次运行
+            runner.Run();
+            command.DidNotReceive().Execute();
+
+
+            /*
+             執行過ClearReceivedCalls就會把實體給null，執行此段可以嘗試用偵錯去看實體，
+             會發現建構子傳入的ICommand實體已經不存在
+             */
+        }
 
     }
 }
