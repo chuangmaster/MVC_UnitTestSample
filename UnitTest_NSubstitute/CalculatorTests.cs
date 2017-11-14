@@ -231,7 +231,7 @@ namespace UnitTest_NSubstitute
         {
             //設定多個返回值
             var calculator = Substitute.For<ICalculator>();
-            
+
             calculator.Mode.Returns("DEC", "HEX", "BIN");
             Assert.AreEqual("DEC", calculator.Mode);
             Assert.AreEqual("HEX", calculator.Mode);
@@ -386,6 +386,41 @@ namespace UnitTest_NSubstitute
             //calculator.Received().Add(0, Arg.Any<int>());
 
             calculator.Received().Add(Arg.Is(0), Arg.Any<int>());
+        }
+
+
+        //http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_callbacks_void_calls_and_when_do.html
+
+        [TestMethod]
+        public void Test_CallbacksWhenDo_PassFunctionsToReturns()
+        {
+            var calculator = Substitute.For<ICalculator>();
+
+            var counter = 0;
+            //此種寫法表示 
+            //calculator
+            //  .Add(0, 0)
+            //  .ReturnsForAnyArgs(x => 0)
+            //  .AndDoes(x => counter++);
+
+            //calculator
+            //  .Add(0, 0)
+            //  .ReturnsForAnyArgs(x =>
+            //  {
+            //      counter++;
+            //      return 0;
+            //  });
+
+            //calculator
+            //  .Add(0, 0)
+            //  .Returns(0)
+            //  .AndDoes(x => counter++);
+
+
+            calculator.Add(7, 3);
+            calculator.Add(2, 2);
+            calculator.Add(11, -3);
+            Assert.AreEqual(counter, 3);
         }
     }
 }
