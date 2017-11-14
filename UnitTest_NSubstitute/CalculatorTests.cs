@@ -13,7 +13,7 @@ namespace UnitTest_NSubstitute
         public void Test_GetStarted_GetSubstitute()
         {
             //透過NSubstitue創建Class, 如 Stub、Mock、Fake、Spy、Test Double 等
-            ICalculator calculator = Substitute.For<ICalculator>();  
+            ICalculator calculator = Substitute.For<ICalculator>();
         }
 
 
@@ -64,7 +64,7 @@ namespace UnitTest_NSubstitute
 
             //可以針對傳遞參數給規則
             calculator.Received().Add(10, Arg.Any<int>());
-            calculator.Received().Add(10, Arg.Is<int>(x => x < 0)); 
+            calculator.Received().Add(10, Arg.Is<int>(x => x < 0));
         }
 
         [TestMethod]
@@ -220,6 +220,35 @@ namespace UnitTest_NSubstitute
             calculator.Add(7, 3);
             calculator.Add(2, 2);
             Assert.AreEqual(counter, 2);
+        }
+
+        //Refer http://www.cnblogs.com/gaochundong/archive/2013/05/21/nsubstitute_multiple_return_values.html
+
+        [TestMethod]
+        public void Test_MultipleReturnValues_ReturnMultipleValues()
+        {
+            //設定多個返回值
+            var calculator = Substitute.For<ICalculator>();
+            
+            calculator.Mode.Returns("DEC", "HEX", "BIN");
+            Assert.AreEqual("DEC", calculator.Mode);
+            Assert.AreEqual("HEX", calculator.Mode);
+            Assert.AreEqual("BIN", calculator.Mode);
+        }
+        /*待會回來看Exception*/
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void Test_MultipleReturnValues_UsingCallbacks()
+        {
+            //使用回調來返多個值
+            var calculator = Substitute.For<ICalculator>();
+
+            calculator.Mode.Returns(x => "DEC", x => "HEX", x => { throw new Exception(); });
+            Assert.AreEqual("DEC", calculator.Mode);
+            Assert.AreEqual("HEX", calculator.Mode);
+
+            var result = calculator.Mode;
         }
     }
 }
