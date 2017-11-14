@@ -59,11 +59,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\CalculatorTests.cs" />
+    <Compile Include="CalculatorTests.cs" />
     <Compile Include="OtherSampleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\CommandRunner.cs" />
     <Compile Include="Test\Interface\ICommand.cs" />
+    <Compile Include="Test\Interface\IFoo.cs" />
     <Compile Include="Test\SomeClassWithCtorArgs.cs" />
   </ItemGroup>
   <ItemGroup>

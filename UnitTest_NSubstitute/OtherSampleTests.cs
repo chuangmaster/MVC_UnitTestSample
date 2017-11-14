@@ -50,5 +50,23 @@ namespace UnitTest_NSubstitute
             func().Returns("hello");
             Assert.AreEqual<string>("hello", func());
         }
+
+        //------------------
+
+
+        [TestMethod]
+        public void Test_ReturnFromFunction_CallInfo()
+        {
+            var foo = Substitute.For<IFoo>();
+            foo.Bar(0, "").ReturnsForAnyArgs(x => "Hello " + x.Arg<string>());
+            Assert.AreEqual("Hello World", foo.Bar(1, "World"));
+
+            //參數列會略過參數f前後的空白
+            foo.Append("", "").ReturnsForAnyArgs(x => (string)x[0] + (string)x[1]);
+            Assert.AreEqual("str1 str2", foo.Append("str1 ", "str2"));
+            Assert.AreEqual("str1str2", foo.Append("str1", "str2"));
+        }
+
+
     }
 }
