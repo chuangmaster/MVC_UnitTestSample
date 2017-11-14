@@ -67,6 +67,7 @@
     <Compile Include="Test\CommandWatcher.cs" />
     <Compile Include="Test\Interface\ICommand.cs" />
     <Compile Include="Test\Interface\IFoo.cs" />
+    <Compile Include="Test\Interface\IFormatter.cs" />
     <Compile Include="Test\OnceOffCommandRunner.cs" />
     <Compile Include="Test\SomeClassWithCtorArgs.cs" />
     <Compile Include="Test\SomethingThatNeedsACommand.cs" />
