@@ -250,5 +250,22 @@ namespace UnitTest_NSubstitute
 
             var result = calculator.Mode;
         }
+
+
+        //http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_replacing_return_values.html
+
+        [TestMethod]
+        public void Test_ReplaceReturnValues_ReplaceSeveralTimes()
+        {
+            //替換返回值
+            var calculator = Substitute.For<ICalculator>();
+
+            calculator.Mode.Returns("DEC,HEX,OCT");
+            calculator.Mode.Returns(x => "???");
+            calculator.Mode.Returns("HEX");
+            calculator.Mode.Returns("BIN");
+
+            Assert.AreEqual(calculator.Mode, "BIN");
+        }
     }
 }
