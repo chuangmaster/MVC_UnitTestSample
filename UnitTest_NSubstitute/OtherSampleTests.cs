@@ -67,6 +67,104 @@ namespace UnitTest_NSubstitute
             Assert.AreEqual("str1str2", foo.Append("str1", "str2"));
         }
 
+        //Refer http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_checking_received_calls.html
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_CallReceived()
+        {
+            //檢查接收到的呼叫
+            //Arrange
+            var command = Substitute.For<ICommand>();
+            var something = new SomethingThatNeedsACommand(command);
+
+            //Act
+            something.DoSomething();
+
+            //Assert
+            command.Received(1).Execute();
+        }
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_CallDidNotReceived()
+        {
+            //檢查沒有收到的呼叫
+            //Arrange
+            var command = Substitute.For<ICommand>();
+            var something = new SomethingThatNeedsACommand(command);
+
+            //Act
+            something.DontDoAnything();
+
+            //Assert
+            command.DidNotReceive().Execute();
+        }
+
+        
+        [TestMethod]
+        public void Test_CheckReceivedCalls_CallReceivedNumberOfSpecifiedTimes()
+        {
+            //檢查接收到次數
+            // Arrange
+            var command = Substitute.For<ICommand>();
+            var repeater = new CommandRepeater(command, 3);
+
+            // Act
+            repeater.Execute();
+
+            // Assert
+            // 如果仅接收到2次或者4次，这里会失败。
+            command.Received(3).Execute();
+
+            // 表示有接收到 >0次
+            command.Received().Execute();
+
+            /*
+             Received(1) 会检查该调用收到并且仅收到一次。这与默认的 Received() 不同，
+             其检查该调用至少接收到了一次。Received(0) 的行为与 DidNotReceive() 相同。
+             
+             */
+        }
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_CheckingCallsToIndexers()
+        {
+            //檢查索引器
+            var dictionary = Substitute.For<IDictionary<string, int>>();
+            dictionary["test"] = 1;
+
+            dictionary.Received()["test"] = 1;
+            dictionary.Received()["test"] = Arg.Is<int>(x => x < 5);
+        }
+
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_CheckingEventSubscriptions()
+        {
+            //檢查事件訂閱
+            var command = Substitute.For<ICommand>();
+            var watcher = new CommandWatcher(command);
+
+            command.Executed += Raise.Event();
+
+            Assert.IsTrue(watcher.DidStuff);
+        }
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_MakeSureWatcherSubscribesToCommandExecuted()
+        {
+            //檢查事件訂閱
+
+            var command = Substitute.For<ICommand>();
+            var watcher = new CommandWatcher(command);
+
+            // 不推荐这种方法。
+            // 更好的办法是测试行为而不是具体实现。
+            command.Received().Executed += watcher.OnExecuted;
+            // 或者有可能事件处理器是不可访问的。
+            command.Received().Executed += Arg.Any<EventHandler>();
+        }
+
+
 
     }
 }

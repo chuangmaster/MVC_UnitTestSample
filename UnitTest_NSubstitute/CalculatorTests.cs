@@ -267,5 +267,58 @@ namespace UnitTest_NSubstitute
 
             Assert.AreEqual(calculator.Mode, "BIN");
         }
+
+        //http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_checking_received_calls.html
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_CallReceivedWithSpecificArguments()
+        {
+            //接收到或者未接收到指定的參數
+            var calculator = Substitute.For<ICalculator>();
+
+            calculator.Add(1, 2);
+            calculator.Add(-100, 100);
+            //calculator.Add(-100, 600);
+
+            // 检查接收到了第一个参数为任意值，第二个参数为2的调用
+            calculator.Received().Add(Arg.Any<int>(), 2);
+            // 检查接收到了第一个参数小于0，第二个参数为100的调用
+            calculator.Received().Add(Arg.Is<int>(x => x < 0), 100);
+            // 检查未接收到第一个参数为任意值，第二个参数大于等于500的调用
+            calculator
+              .DidNotReceive()
+              .Add(Arg.Any<int>(), Arg.Is<int>(x => x >= 500));
+        }
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_IgnoringArguments()
+        {
+            //忽略參数
+            var calculator = Substitute.For<ICalculator>();
+
+            calculator.Add(1, 3);
+
+            calculator.ReceivedWithAnyArgs().Add(1, 1);
+            calculator.DidNotReceiveWithAnyArgs().Subtract(0, 0);
+        }
+
+        [TestMethod]
+        public void Test_CheckReceivedCalls_CheckingCallsToPropeties()
+        {
+            //檢查對屬性的使用
+            var calculator = Substitute.For<ICalculator>();
+
+            var mode = calculator.Mode;
+            calculator.Mode = "TEST";
+
+            // 检查接收到了对属性 getter 的调用
+            // 这里需要使用临时变量以通过编译
+            var temp = calculator.Received().Mode;
+
+            // 检查接收到了对属性 setter 的调用，参数为"TEST"
+            calculator.Received().Mode = "TEST";
+        }
+
+
     }
 }

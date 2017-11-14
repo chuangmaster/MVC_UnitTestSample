@@ -9,6 +9,8 @@ namespace UnitTest_NSubstitute.Test.Interface
     public interface ICommand : IDisposable
     {
         void Execute();
+        event EventHandler Executed;
+
     }
 
 }
