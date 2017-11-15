@@ -474,5 +474,29 @@ namespace UnitTest_NSubstitute
             // 抛出异常
             calculator.Add(-2, -2);
         }
+
+        //Refer http://www.cnblogs.com/gaochundong/archive/2013/05/22/nsubstitute_setting_out_and_ref_args.html
+
+        [TestMethod]
+        public void Test_SetOutRefArgs_SetOutArg()
+        {
+            // Arrange
+            var value = "";
+            var lookup = Substitute.For<ILookup>();
+            lookup
+              .TryLookup("hello", out value)
+              .Returns(x =>
+              {
+                  x[1] = "world!";
+                  return true;
+              });
+
+            // Act
+            var result = lookup.TryLookup("hello", out value);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(value, "world!");
+        }
     }
 }
